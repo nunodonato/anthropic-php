@@ -1,0 +1,32 @@
+{
+  "name": "nunodonato/anthropic-php",
+  "description": "sd",
+  "type": "library",
+  "license": "MIT",
+  "require-dev": {
+    "phpstan/phpstan": "^1.10",
+    "env/dotenv": "@stable"
+  },
+  "require": {
+    "php": "^8.1",
+    "illuminate/http": "^11.0",
+    "phpunit/phpunit": "^11.1"
+  },
+  "autoload": {
+        "psr-4": {
+            "Nunodonato\\AnthropicAPIPHP\\": "src/"
+        }
+    },
+  "autoload-dev": {
+    "psr-4": {
+      "Nunodonato\\AnthropicAPIPHP\\Tests\\": "tests/"
+    }
+  },
+    "authors": [
+        {
+            "name": "Nuno Donato",
+            "email": "nunodonato@fastmail.com"
+        }
+    ]
+
+}
