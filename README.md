@@ -47,7 +47,15 @@ $response = $this->client->messages(Client::MODEL_SONNET, $messages);
 
 // you can chain messages
 $messages->addUserTextMessage('Hello AI!')
-->addAssistantTextMessage('Hello human!')
-->addUserImageMessage('https://example.com/image.jpg', 'What do you see here?');
+        ->addAssistantTextMessage('Hello human!')
+        ->addUserImageMessage('https://example.com/image.jpg', 'What do you see here?');
 
+```
+
+#### Available models
+```php
+    const MODEL_OPUS = 'claude-3-opus-20240229';
+    const MODEL_SONNET = 'claude-3-sonnet-20240229';
+    const MODEL_HAIKU = 'claude-3-haiku-20240307';
+    const MODEL_CLAUDE_2 = 'claude-2.1';
 ```
