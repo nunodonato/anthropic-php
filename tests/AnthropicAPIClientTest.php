@@ -3,6 +3,7 @@
 namespace Nunodonato\AnthropicAPIPHP\Tests;
 
 use Env\Dotenv;
+use Nunodonato\AnthropicAPIPHP\Messages;
 use PHPUnit\Framework\TestCase;
 use Nunodonato\AnthropicAPIPHP\Client;
 
@@ -30,12 +31,9 @@ class AnthropicAPIClientTest extends TestCase
 
     public function test_messages()
     {
-        $messages = [
-            [
-                'role' => 'user',
-                'content' => 'Hello!',
-            ]
-        ];
+        $messages = new Messages();
+        $messages->addUserTextMessage('Hello!');
+        $messages->addAssistantTextMessage('Not so fast');
 
         $response = $this->client->message(Client::MODEL_SONNET, $messages);
 

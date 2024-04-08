@@ -27,11 +27,11 @@ class Client
         );
     }
 
-    public function message(string $model, array $messages, string $systemPrompt = '', array $tools = [], array $stopSequences = [], int $maxTokens = 1000, float $temperature = 1.0, ?float $topP = null, ?float $topK = null, bool $stream = false): array
+    public function message(string $model, Messages $messages, string $systemPrompt = '', array $tools = [], array $stopSequences = [], int $maxTokens = 1000, float $temperature = 1.0, ?float $topP = null, ?float $topK = null, bool $stream = false): array
     {
         $data = [
             'model' => $model,
-            'messages' => $messages,
+            'messages' => $messages->messages(),
             'system' => $systemPrompt,
             'max_tokens' => $maxTokens,
         ];
