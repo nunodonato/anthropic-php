@@ -19,7 +19,7 @@ class Messages
         return $this->addMessage(self::ROLE_USER, $text);
     }
 
-    public function addUserImageMessage(string $url, string $text): self
+    public function addUserImageMessage(string $url, ?string $text = null): self
     {
         $contents = file_get_contents($url);
         if (!$contents) {
@@ -37,16 +37,17 @@ class Messages
                 'media_type' => $mediaType
             ],
         ];
+        $message = [ $imageMessage ];
 
-        $textMessage = [
-            'role' => self::ROLE_USER,
-            'content' => $text
-        ];
+        if ($text) {
+            $textMessage = [
+                'role' => self::ROLE_USER,
+                'content' => $text
+            ];
+            $message[] = $textMessage;
+        }
 
-        $this->messages[] = [
-            $imageMessage,
-            $textMessage
-        ];
+        $this->messages[] = $message;
 
         return $this;
     }
