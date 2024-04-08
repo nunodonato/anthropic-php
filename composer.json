@@ -15,12 +15,12 @@
   },
   "autoload": {
         "psr-4": {
-            "Nunodonato\\AnthropicAPIPHP\\": "src/"
+            "NunoDonato\\AnthropicAPIPHP\\": "src/"
         }
     },
   "autoload-dev": {
     "psr-4": {
-      "Nunodonato\\AnthropicAPIPHP\\Tests\\": "tests/"
+      "NunoDonato\\AnthropicAPIPHP\\Tests\\": "tests/"
     }
   },
     "authors": [

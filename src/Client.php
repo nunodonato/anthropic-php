@@ -1,6 +1,6 @@
 <?php
 
-namespace Nunodonato\AnthropicAPIPHP;
+namespace NunoDonato\AnthropicAPIPHP;
 
 use Illuminate\Http\Client\PendingRequest;
 

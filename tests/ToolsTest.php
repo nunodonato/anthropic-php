@@ -1,6 +1,6 @@
 <?php
 
-namespace Nunodonato\AnthropicAPIPHP\Tests;
+namespace NunoDonato\AnthropicAPIPHP\Tests;
 
 use Env\Dotenv;
 use Nunodonato\AnthropicAPIPHP\Messages;

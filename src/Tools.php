@@ -1,6 +1,6 @@
 <?php
 
-namespace Nunodonato\AnthropicAPIPHP;
+namespace NunoDonato\AnthropicAPIPHP;
 
 class Tools
 {

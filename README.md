@@ -22,7 +22,7 @@ More soon.
 #### Instantiate the client
 
 ```php
-use Nunodonato\AnthropicAPIPHP\Client;
+use NunoDonato\AnthropicAPIPHP\Client;
 
 // ...
 
@@ -34,8 +34,8 @@ $client = new Client($yourApiKey, useBeta: true);
 #### Messages API usage
 
 ```php
-use Nunodonato\AnthropicAPIPHP\Client;
-use Nunodonato\AnthropicAPIPHP\Messages;
+use NunoDonato\AnthropicAPIPHP\Client;
+use NunoDonato\AnthropicAPIPHP\Messages;
 
 // ...
 
@@ -47,7 +47,7 @@ $response = $this->client->messages(Client::MODEL_SONNET, $messages);
 
 // you can chain messages
 $messages->addUserTextMessage('Hello AI!')
-->addAssistantTextMessage('Hello human!');
+->addAssistantTextMessage('Hello human!')
 ->addUserImageMessage('https://example.com/image.jpg', 'What do you see here?');
 
 ```
