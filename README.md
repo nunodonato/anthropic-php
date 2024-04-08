@@ -16,4 +16,38 @@ I created this package to fulfull my own needs on my AI projects. I am aware tha
 `composer require nunodonato/anthropic-php`
 
 ### Usage
-coming soon
+
+More soon.
+
+#### Instantiate the client
+
+```php
+use Nunodonato\AnthropicAPIPHP\Client;
+
+// ...
+
+$client = new Client($yourApiKey);
+// or, for tool usage
+$client = new Client($yourApiKey, useBeta: true);
+```
+
+#### Messages API usage
+
+```php
+use Nunodonato\AnthropicAPIPHP\Client;
+use Nunodonato\AnthropicAPIPHP\Messages;
+
+// ...
+
+$client = new Client($yourApiKey);
+$messages = new Messages();
+$messages->addUserTextMessage('Hello AI!');
+
+$response = $this->client->messages(Client::MODEL_SONNET, $messages);
+
+// you can chain messages
+$messages->addUserTextMessage('Hello AI!')
+->addAssistantTextMessage('Hello human!');
+->addUserImageMessage('https://example.com/image.jpg', 'What do you see here?');
+
+```
