@@ -4,6 +4,7 @@ namespace Nunodonato\AnthropicAPIPHP\Tests;
 
 use Env\Dotenv;
 use Nunodonato\AnthropicAPIPHP\Messages;
+use Nunodonato\AnthropicAPIPHP\Tools;
 use PHPUnit\Framework\TestCase;
 use Nunodonato\AnthropicAPIPHP\Client;
 
@@ -11,6 +12,7 @@ class AnthropicAPIClientTest extends TestCase
 {
     private ?Client $client = null;
 
+    private string $apiKey = '';
     protected function setUp(): void
     {
         $env = Dotenv::toArray(
@@ -18,7 +20,9 @@ class AnthropicAPIClientTest extends TestCase
             strict: false, // by default: true
         );
 
-        $this->client = new Client($env['ANTHROPIC_API_KEY']);
+        $this->apiKey = $env['ANTHROPIC_API_KEY'];
+
+        $this->client = new Client($this->apiKey);
     }
 
 
@@ -35,9 +39,42 @@ class AnthropicAPIClientTest extends TestCase
         $messages->addUserTextMessage('Hello!');
         $messages->addAssistantTextMessage('Not so fast');
 
-        $response = $this->client->message(Client::MODEL_SONNET, $messages);
+        $response = $this->client->messages(Client::MODEL_SONNET, $messages);
 
         $this->assertArrayHasKey('content', $response);
         $this->assertArrayNotHasKey('error', $response);
+    }
+
+    public function test_tools()
+    {
+        $client = new Client($this->apiKey, useBeta: true);
+        $weatherTool = [
+            'name' => 'weather',
+            'description' => 'Get the weather in a given location',
+            'input_schema' => [
+                'type' => 'object',
+                'properties' => [
+                    'city' => [
+                        'type' => 'string',
+                        'description' => 'City name'
+                    ],
+                    'country_code' => [
+                        'type' => 'string',
+                        'description' => '2-letter Country code'
+                    ]
+                ],
+                'required' => ['city']
+            ]
+        ];
+
+        $tools = new Tools();
+        $tools->addToolFromArray($weatherTool);
+        $messages = new Messages();
+        $messages->addUserTextMessage('What is the weather in Lisbon, Portugal?');
+        $response = $client->messages(Client::MODEL_SONNET, $messages, tools: $tools);
+
+        $this->assertArrayHasKey('content', $response);
+        $toolUse = array_filter($response['content'], fn($message) => $message['type'] === 'tool_use');
+        $this->assertNotEquals(0, $toolUse);
     }
 }

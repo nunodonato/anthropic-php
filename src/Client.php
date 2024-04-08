@@ -14,21 +14,34 @@ class Client
 
     private PendingRequest $pendingRequest;
 
-    public function __construct(string $apiKey, string $version = '2023-06-01')
+    public function __construct(string $apiKey, string $version = '2023-06-01', private readonly bool $useBeta = false)
     {
         $this->pendingRequest = new PendingRequest();
 
-        // x-api-key is the header name for the API key
-        $this->pendingRequest->withHeaders([
-                'x-api-key' => $apiKey,
-                'anthropic-version' => $version,
-                'content-type' => 'application/json'
-            ]
-        );
+        $headers = [
+            'x-api-key' => $apiKey,
+            'anthropic-version' => $version,
+            'content-type' => 'application/json'
+        ];
+        if ($this->useBeta) {
+            $headers['anthropic-beta'] = 'tools-2024-04-04';
+        }
+
+        $this->pendingRequest->withHeaders($headers);
     }
 
-    public function message(string $model, Messages $messages, string $systemPrompt = '', array $tools = [], array $stopSequences = [], int $maxTokens = 1000, float $temperature = 1.0, ?float $topP = null, ?float $topK = null, bool $stream = false): array
-    {
+    public function messages(
+        string $model,
+        Messages $messages,
+        string $systemPrompt = '',
+        ?Tools $tools = null,
+        array $stopSequences = [],
+        int $maxTokens = 1000,
+        float $temperature = 1.0,
+        ?float $topP = null,
+        ?float $topK = null,
+        bool $stream = false
+    ): array {
         $data = [
             'model' => $model,
             'messages' => $messages->messages(),
@@ -36,8 +49,12 @@ class Client
             'max_tokens' => $maxTokens,
         ];
 
+        if ($tools && count($tools->tools()) > 0 && !$this->useBeta) {
+            throw new \InvalidArgumentException('Tools are only available in the beta version');
+        }
+
         $optionalParams = [
-            'tools' => count($tools) > 0 ? $tools : null,
+            'tools' => ($tools && count($tools->tools())) > 0 ? $tools->tools() : null,
             'stop_sequences' => count($stopSequences) > 0 ? $stopSequences : null,
             'temperature' => $temperature !== 1.0 ? $temperature : null,
             'top_p' => $topP !== null ? $topP : null,
@@ -45,17 +62,28 @@ class Client
             'stream' => $stream ? true : null,
         ];
 
-        $data = array_merge($data, array_filter($optionalParams, function ($value) {
-            return $value !== null;
-        }));
+        $data = array_merge(
+            $data,
+            array_filter($optionalParams, function ($value) {
+                return $value !== null;
+            })
+        );
 
         $response = $this->pendingRequest->post('https://api.anthropic.com/v1/messages', $data);
 
         return $response->json();
     }
 
-    public function completion(string $model, string $prompt, int $maxTokens = 1000, array $stopSequences = [], float $temperature = 1.0, ?float $topP = null, ?float $topK = null, bool $stream = false): array
-    {
+    public function completion(
+        string $model,
+        string $prompt,
+        int $maxTokens = 1000,
+        array $stopSequences = [],
+        float $temperature = 1.0,
+        ?float $topP = null,
+        ?float $topK = null,
+        bool $stream = false
+    ): array {
         $data = [
             'model' => $model,
             'prompt' => $prompt,
@@ -70,9 +98,12 @@ class Client
             'stream' => $stream ? true : null,
         ];
 
-        $data = array_merge($data, array_filter($optionalParams, function ($value) {
-            return $value !== null;
-        }));
+        $data = array_merge(
+            $data,
+            array_filter($optionalParams, function ($value) {
+                return $value !== null;
+            })
+        );
 
         $response = $this->pendingRequest->post('https://api.anthropic.com/v1/complete', $data);
 
