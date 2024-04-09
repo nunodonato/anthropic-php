@@ -3,10 +3,10 @@
 namespace NunoDonato\AnthropicAPIPHP\Tests;
 
 use Env\Dotenv;
-use Nunodonato\AnthropicAPIPHP\Messages;
-use Nunodonato\AnthropicAPIPHP\Tools;
+use NunoDonato\AnthropicAPIPHP\Messages;
+use NunoDonato\AnthropicAPIPHP\Tools;
 use PHPUnit\Framework\TestCase;
-use Nunodonato\AnthropicAPIPHP\Client;
+use NunoDonato\AnthropicAPIPHP\Client;
 
 class ToolsTest extends TestCase
 {
