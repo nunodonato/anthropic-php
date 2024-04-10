@@ -77,4 +77,31 @@ class AnthropicAPIClientTest extends TestCase
         $toolUse = array_filter($response['content'], fn($message) => $message['type'] === 'tool_use');
         $this->assertNotEquals(0, $toolUse);
     }
+
+    public function test_setTimeoutExists()
+    {
+        $timeoutSeconds = 10;
+        $this->client->setTimeout($timeoutSeconds);
+
+        $this->assertTrue(method_exists($this->client, 'setTimeout'), 'setTimeout method does not exist');
+    }
+
+    public function test_setTimeoutSetsCorrectValue()
+    {
+        $timeoutSeconds = 33;
+        $this->client->setTimeout($timeoutSeconds);
+
+        $reflection = new \ReflectionClass($this->client);
+        $pendingRequestProperty = $reflection->getProperty('pendingRequest');
+        $pendingRequestProperty->setAccessible(true);
+        $pendingRequest = $pendingRequestProperty->getValue($this->client);
+
+        $reflectionRequest = new \ReflectionClass($pendingRequest);
+        $optionsProperty = $reflectionRequest->getProperty('options');
+        $optionsProperty->setAccessible(true);
+
+        $options = $optionsProperty->getValue($pendingRequest);
+
+        $this->assertEquals($timeoutSeconds, $options['timeout'], 'The set timeout does not match the expected value');
+    }
 }

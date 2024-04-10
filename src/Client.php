@@ -30,6 +30,12 @@ class Client
         $this->pendingRequest->withHeaders($headers);
     }
 
+    public function setTimeout(int $seconds): self
+    {
+        $this->pendingRequest->timeout($seconds);
+        return $this;
+    }
+
     public function messages(
         string $model,
         Messages $messages,
