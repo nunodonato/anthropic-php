@@ -1,6 +1,6 @@
 {
   "name": "nunodonato/anthropic-php",
-  "description": "sd",
+  "description": "A PHP client for the Anthropic API",
   "type": "library",
   "license": "MIT",
   "require-dev": {
