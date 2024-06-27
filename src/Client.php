@@ -3,6 +3,7 @@
 namespace NunoDonato\AnthropicAPIPHP;
 
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Support\Facades\Http;
 
 class Client
 {
@@ -49,7 +50,7 @@ class Client
         ?float $topP = null,
         ?float $topK = null,
         bool $stream = false
-    ): array {
+    ): array|string {
         $data = [
             'model' => $model,
             'messages' => $messages->messages(),
@@ -77,9 +78,26 @@ class Client
             })
         );
 
+        if ($stream) {
+            return $this->pendingRequest->withOptions(['stream' => true])
+                ->post('https://api.anthropic.com/v1/messages', $data)
+                ->toPsrResponse()
+                ->getBody()
+                ->getContents();
+        }
+
         $response = $this->pendingRequest->post('https://api.anthropic.com/v1/messages', $data);
 
         return $response->json();
+    }
+
+    private function handleStreamResponse(array $data): StreamResponse
+    {
+        $response = Http::withHeaders($this->pendingRequest->getHeaders())
+            ->withOptions(['stream' => true])
+            ->post('https://api.anthropic.com/v1/messages', $data);
+
+        return new StreamResponse($response->toPsrResponse()->getBody());
     }
 
     public function completion(

@@ -104,4 +104,56 @@ class AnthropicAPIClientTest extends TestCase
 
         $this->assertEquals($timeoutSeconds, $options['timeout'], 'The set timeout does not match the expected value');
     }
+
+    public function test_streamingMessages()
+    {
+        $messages = new Messages();
+        $messages->addUserTextMessage('Tell me a short story about a robot.');
+
+        $response = $this->client->messages(
+            Client::MODEL_3_5_SONNET,
+            $messages,
+            stream: true
+        );
+
+        $this->assertIsString($response);
+
+        $events = $this->parseEvents($response);
+
+        $this->assertNotEmpty($events);
+        $this->assertEquals('message_start', $events[0]['type']);
+
+        $contentReceived = '';
+        foreach ($events as $event) {
+            if ($event['type'] === 'content_block_delta' && $event['delta']['type'] === 'text_delta') {
+                $contentReceived .= $event['delta']['text'];
+            }
+        }
+
+        $this->assertNotEmpty($contentReceived);
+        $this->assertStringContainsString('robot', $contentReceived);
+    }
+
+    private function parseEvents(string $response): array
+    {
+        $events = [];
+        $lines = explode("\n", $response);
+        $currentEvent = [];
+
+        foreach ($lines as $line) {
+            if (strpos($line, 'data:') === 0) {
+                $jsonData = json_decode(substr($line, 5), true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $currentEvent = array_merge($currentEvent, $jsonData);
+                }
+            } elseif ($line === '') {
+                if (!empty($currentEvent)) {
+                    $events[] = $currentEvent;
+                    $currentEvent = [];
+                }
+            }
+        }
+
+        return $events;
+    }
 }
