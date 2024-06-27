@@ -85,8 +85,6 @@ class Messages
                     throw new \InvalidArgumentException('Media type and data property are required for image type. Index: ' . $i);
                 }
             }
-
-            return $this;
         }
 
         $this->messages[] = [
