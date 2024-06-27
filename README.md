@@ -27,8 +27,6 @@ use NunoDonato\AnthropicAPIPHP\Client;
 // ...
 
 $client = new Client($yourApiKey);
-// or, for tool usage
-$client = new Client($yourApiKey, useBeta: true);
 ```
 
 #### Messages API usage

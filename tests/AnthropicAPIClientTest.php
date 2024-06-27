@@ -47,7 +47,7 @@ class AnthropicAPIClientTest extends TestCase
 
     public function test_tools()
     {
-        $client = new Client($this->apiKey, useBeta: true);
+        $client = new Client($this->apiKey);
         $weatherTool = [
             'name' => 'weather',
             'description' => 'Get the weather in a given location',

@@ -7,9 +7,13 @@ class Messages
     const ROLE_USER = 'user';
     const ROLE_ASSISTANT = 'assistant';
 
+    /** @var array<int, array<mixed, mixed>> */
     private array $messages = [];
 
 
+    /**
+     * @return array<int, array<mixed, mixed>>
+     */
     public function messages(): array
     {
         return $this->messages;
@@ -57,6 +61,9 @@ class Messages
         return $this->addMessage(self::ROLE_ASSISTANT, $text);
     }
 
+    /**
+     * @param string|array<int, array<string, string>> $content
+     */
     public function addMessage(string $role, string|array $content): self
     {
         if (!in_array($role, [self::ROLE_USER, self::ROLE_ASSISTANT])) {

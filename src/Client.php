@@ -16,7 +16,7 @@ class Client
 
     private PendingRequest $pendingRequest;
 
-    public function __construct(string $apiKey, string $version = '2023-06-01', private readonly bool $useBeta = false)
+    public function __construct(string $apiKey, string $version = '2023-06-01')
     {
         $this->pendingRequest = new PendingRequest();
 
@@ -25,9 +25,6 @@ class Client
             'anthropic-version' => $version,
             'content-type' => 'application/json'
         ];
-        if ($this->useBeta) {
-            $headers['anthropic-beta'] = 'tools-2024-04-04';
-        }
 
         $this->pendingRequest->withHeaders($headers);
     }
@@ -38,6 +35,10 @@ class Client
         return $this;
     }
 
+    /**
+     * @param string[] $stopSequences
+     * @return array<string, mixed>
+     */
     public function messages(
         string $model,
         Messages $messages,
@@ -56,10 +57,6 @@ class Client
             'system' => $systemPrompt,
             'max_tokens' => $maxTokens,
         ];
-
-        if ($tools && count($tools->tools()) > 0 && !$this->useBeta) {
-            throw new \InvalidArgumentException('Tools are only available in the beta version');
-        }
 
         $optionalParams = [
             'tools' => ($tools && count($tools->tools())) > 0 ? $tools->tools() : null,
@@ -82,6 +79,10 @@ class Client
         return $response->json();
     }
 
+    /**
+     * @param string[] $stopSequences
+     * @return array<string, mixed>
+     */
     public function completion(
         string $model,
         string $prompt,

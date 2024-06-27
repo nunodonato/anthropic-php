@@ -4,14 +4,19 @@ namespace NunoDonato\AnthropicAPIPHP;
 
 class Tools
 {
+    /** @var array<int, array<string, mixed>> */
     private array $tools = [];
 
 
+    /** @return array<int, array<string, mixed>> */
     public function tools(): array
     {
         return $this->tools;
     }
 
+    /**
+     * @param array<string, mixed> $tool
+     */
     public function addToolFromArray(array $tool): self
     {
         $required = ['name', 'description', 'input_schema'];
@@ -39,6 +44,9 @@ class Tools
         return $this;
     }
 
+    /**
+     * @param array<int, array<string, mixed>> $tools
+     */
     public function addToolsFromArray(array $tools): self
     {
         foreach ($tools as $i => $tool) {
