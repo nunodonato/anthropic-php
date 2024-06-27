@@ -39,7 +39,7 @@ class AnthropicAPIClientTest extends TestCase
         $messages->addUserTextMessage('Hello!');
         $messages->addAssistantTextMessage('Not so fast');
 
-        $response = $this->client->messages(Client::MODEL_SONNET, $messages);
+        $response = $this->client->messages(Client::MODEL_3_5_SONNET, $messages);
 
         $this->assertArrayHasKey('content', $response);
         $this->assertArrayNotHasKey('error', $response);
