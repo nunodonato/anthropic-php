@@ -71,21 +71,29 @@ class Messages
         }
 
         if (is_array($content)) {
-            foreach ($content as $i => $message) {
-                if (!is_array($message)) {
-                    throw new \InvalidArgumentException('Message must be an array. Index: ' . $i);
+            foreach ($content as $i => $block) {
+                if (!is_array($block)) {
+                    throw new \InvalidArgumentException('Block must be an array. Index: ' . $i);
                 }
-                if (!array_key_exists('type', $message)) {
-                    throw new \InvalidArgumentException('Message type is required. Index: ' . $i);
+                if (!array_key_exists('type', $block)) {
+                    throw new \InvalidArgumentException('Block content type is required. Index: ' . $i);
                 }
-                if ($message['type'] == 'text' && !array_key_exists('text', $message)) {
-                    throw new \InvalidArgumentException('Text property is required for text type. Index: ' . $i);
+                if ($block['type'] == 'text' && !array_key_exists('text', $block)) {
+                    throw new \InvalidArgumentException('Block text property is required for text type. Index: ' . $i);
                 }
-                if ($message['type'] == 'image' && (!array_key_exists('media_type', $message) || !array_key_exists('data', $message))) {
-                    throw new \InvalidArgumentException('Media type and data property are required for image type. Index: ' . $i);
+                if ($block['type'] == 'image' && (!array_key_exists('media_type', $block) || !array_key_exists('data', $block))) {
+                    throw new \InvalidArgumentException('Block media type and data property are required for image type. Index: ' . $i);
                 }
             }
         }
+
+        if (count($this->messages) > 0) {
+            $lastMessage = $this->messages[count($this->messages) - 1];
+            if ($lastMessage['role'] === $role) {
+                throw new \InvalidArgumentException('Roles must alternate between "user" and "assistant". Message ' . count($this->messages) . ' has the same role as the previous message.');
+            }
+        }
+
 
         $this->messages[] = [
             'role' => $role,

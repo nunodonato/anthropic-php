@@ -44,5 +44,6 @@ class ToolsTest extends TestCase
                 'required' => ['test']
             ]
         ]);
+        $this->assertCount(1,$tools->tools());
     }
 }
