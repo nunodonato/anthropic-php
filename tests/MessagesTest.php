@@ -27,11 +27,15 @@ class MessagesTest extends TestCase
         $this->assertCount(1, $messages->messages());
     }
 
-    public function test_prevents_non_alternated_roles()
+    public function test_joins_continuous_messages_with_the_same_role()
     {
         $messages = new Messages();
         $messages->addMessage(Messages::ROLE_USER, 'Hello');
-        $this->expectExceptionMessage('Roles must alternate between "user" and "assistant".');
         $messages->addMessage(Messages::ROLE_USER, 'How are you?');
+        $messages->addMessage(Messages::ROLE_ASSISTANT, 'I am fine');
+        $result = $messages->messages();
+        $this->assertCount(2, $result);
+        $this->assertCount(2, $result[0]['content']);
+        $this->assertCount(1, $result[1]['content']);
     }
 }

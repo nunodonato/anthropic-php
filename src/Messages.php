@@ -18,6 +18,7 @@ class Messages
     {
         return $this->messages;
     }
+
     public function addUserTextMessage(string $text): self
     {
         return $this->addMessage(self::ROLE_USER, $text);
@@ -41,7 +42,7 @@ class Messages
                 'media_type' => $mediaType
             ],
         ];
-        $message = [ $imageMessage ];
+        $message = [$imageMessage];
 
         if ($text) {
             $textMessage = [
@@ -81,16 +82,31 @@ class Messages
                 if ($block['type'] == 'text' && !array_key_exists('text', $block)) {
                     throw new \InvalidArgumentException('Block text property is required for text type. Index: ' . $i);
                 }
-                if ($block['type'] == 'image' && (!array_key_exists('media_type', $block) || !array_key_exists('data', $block))) {
-                    throw new \InvalidArgumentException('Block media type and data property are required for image type. Index: ' . $i);
+                if ($block['type'] == 'image' && (!array_key_exists('media_type', $block) || !array_key_exists(
+                            'data',
+                            $block
+                        ))) {
+                    throw new \InvalidArgumentException(
+                        'Block media type and data property are required for image type. Index: ' . $i
+                    );
                 }
             }
+        } else {
+            // let's standardize the way the blocks are passed
+            $content = [
+                [
+                    'type' => 'text',
+                    'text' => $content
+                ]
+            ];
         }
 
         if (count($this->messages) > 0) {
             $lastMessage = $this->messages[count($this->messages) - 1];
             if ($lastMessage['role'] === $role) {
-                throw new \InvalidArgumentException('Roles must alternate between "user" and "assistant". Message ' . count($this->messages) . ' has the same role as the previous message.');
+                // merge messages of the same role
+                $this->messages[count($this->messages) - 1]['content'] = array_merge($lastMessage['content'], $content);
+                return $this;
             }
         }
 
