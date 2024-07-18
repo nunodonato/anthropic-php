@@ -52,7 +52,10 @@ class Messages
             $message[] = $textMessage;
         }
 
-        $this->messages[] = $message;
+        $this->messages[] = [
+            'role' => self::ROLE_USER,
+            'content' => $message,
+        ];
 
         return $this;
     }
@@ -82,12 +85,12 @@ class Messages
                 if ($block['type'] == 'text' && !array_key_exists('text', $block)) {
                     throw new \InvalidArgumentException('Block text property is required for text type. Index: ' . $i);
                 }
-                if ($block['type'] == 'image' && (!array_key_exists('media_type', $block) || !array_key_exists(
+                if ($block['type'] == 'image' && (!array_key_exists('source', $block) || !array_key_exists(
                             'data',
-                            $block
-                        ))) {
+                            $block['source']
+                        ) || !array_key_exists('media_type', $block['source']))) {
                     throw new \InvalidArgumentException(
-                        'Block media type and data property are required for image type. Index: ' . $i
+                        'source.media_type and source.data properties are required for image type. Index: ' . $i
                     );
                 }
             }

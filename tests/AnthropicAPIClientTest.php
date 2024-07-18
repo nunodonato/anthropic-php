@@ -45,6 +45,17 @@ class AnthropicAPIClientTest extends TestCase
         $this->assertArrayNotHasKey('error', $response);
     }
 
+    public function test_vision()
+    {
+        $messages = new Messages();
+        $messages->addUserImageMessage('tests/stubs/hello.png');
+
+        $response = $this->client->messages(Client::MODEL_3_5_SONNET, $messages);
+
+        $this->assertArrayHasKey('content', $response);
+        $this->assertArrayNotHasKey('error', $response);
+    }
+
     public function test_tools()
     {
         $client = new Client($this->apiKey);
