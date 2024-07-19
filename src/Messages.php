@@ -60,6 +60,34 @@ class Messages
         return $this;
     }
 
+    public function addUserImageMessageFromBase64(string $base64Encoded, string $mimeType, ?string $text = null): self
+    {
+        $imageMessage = [
+            'type' => 'image',
+            'source' => [
+                'type' => 'base64',
+                'data' => $base64Encoded,
+                'media_type' => $mimeType
+            ],
+        ];
+        $message = [$imageMessage];
+
+        if ($text) {
+            $textMessage = [
+                'role' => self::ROLE_USER,
+                'content' => $text
+            ];
+            $message[] = $textMessage;
+        }
+
+        $this->messages[] = [
+            'role' => self::ROLE_USER,
+            'content' => $message,
+        ];
+
+        return $this;
+    }
+
     public function addAssistantTextMessage(string $text): self
     {
         return $this->addMessage(self::ROLE_ASSISTANT, $text);
