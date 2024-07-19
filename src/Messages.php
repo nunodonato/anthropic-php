@@ -52,10 +52,7 @@ class Messages
             $message[] = $textMessage;
         }
 
-        $this->messages[] = [
-            'role' => self::ROLE_USER,
-            'content' => $message,
-        ];
+        $this->addMessage(self::ROLE_USER, $message);
 
         return $this;
     }
@@ -80,10 +77,7 @@ class Messages
             $message[] = $textMessage;
         }
 
-        $this->messages[] = [
-            'role' => self::ROLE_USER,
-            'content' => $message,
-        ];
+        $this->addMessage(self::ROLE_USER, $message);
 
         return $this;
     }
