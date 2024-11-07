@@ -54,9 +54,9 @@ $messages->addUserTextMessage('Hello AI!')
 #### Available models
 ```php
 const MODEL_OPUS = 'claude-3-opus-20240229';
-    const MODEL_SONNET = 'claude-3-sonnet-20240229';
-    const MODEL_HAIKU = 'claude-3-haiku-20240307';
-    const MODEL_3_5_SONNET = 'claude-3-5-sonnet-latest';
-    const MODEL_3_5_HAIKU = 'claude-3-5-haiku-latest';
-    const MODEL_CLAUDE_2 = 'claude-2.1';
+const MODEL_SONNET = 'claude-3-sonnet-20240229';
+const MODEL_HAIKU = 'claude-3-haiku-20240307';
+const MODEL_3_5_SONNET = 'claude-3-5-sonnet-latest';
+const MODEL_3_5_HAIKU = 'claude-3-5-haiku-latest';
+const MODEL_CLAUDE_2 = 'claude-2.1';
 ```
