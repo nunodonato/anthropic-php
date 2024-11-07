@@ -18,6 +18,8 @@ class Client
 
     private PendingRequest $pendingRequest;
 
+    private bool $withSystemCaching = false;
+
     public function __construct(string $apiKey, string $version = '2023-06-01')
     {
         $this->pendingRequest = new PendingRequest();
@@ -29,6 +31,12 @@ class Client
         ];
 
         $this->pendingRequest->withHeaders($headers);
+    }
+
+    public function withSystemCaching(bool $withSystemCaching = true): self
+    {
+        $this->withSystemCaching = $withSystemCaching;
+        return $this;
     }
 
     public function setTimeout(int $seconds): self
@@ -53,6 +61,20 @@ class Client
         ?float $topK = null,
         bool $stream = false
     ): array {
+
+        if ($this->withSystemCaching) {
+            $systemPrompt = [
+              [
+                  'type' => 'text',
+                  'text' => $systemPrompt,
+                  'cache_control' => [
+                      'type' => 'ephemeral',
+            ]
+              ],
+            ];
+            $this->pendingRequest->withHeader('anthropic-beta', 'prompt-caching-2024-07-31');
+        }
+
         $data = [
             'model' => $model,
             'messages' => $messages->messages(),

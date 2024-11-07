@@ -45,6 +45,19 @@ class AnthropicAPIClientTest extends TestCase
         $this->assertArrayNotHasKey('error', $response);
     }
 
+    public function test_system_caching()
+    {
+        $messages = new Messages();
+        $messages->addUserTextMessage('Hello how are you?');
+        $systemPrompt = "Translate all user messages to spanish";
+
+        $response = $this->client->withSystemCaching()->messages(Client::MODEL_3_5_HAIKU, $messages, $systemPrompt);
+
+        $this->assertArrayHasKey('content', $response);
+        $this->assertArrayNotHasKey('error', $response);
+        $this->assertArrayHasKey('cache_creation_input_tokens', $response['usage']);
+    }
+
     public function test_vision_from_url()
     {
         $messages = new Messages();
